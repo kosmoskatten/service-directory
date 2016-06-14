@@ -3,8 +3,8 @@ module Main
     ( main
     ) where
 
-import Control.Concurrent.MVar (newEmptyMVar, takeMVar)
-import Control.Monad (void, forM_)
+import Control.Concurrent (threadDelay)
+import Control.Monad (void, forM_, forever)
 import Control.Concurrent.STM ( STM
                               , TVar
                               , atomically
@@ -46,8 +46,7 @@ serviceDirectory conn = do
     void $ subAsyncJson' conn "service.register.*" $ serviceRegister conn sm
     void $ subAsync' conn "service.request.*" $ serviceRequest conn sm
 
-    sleepingPill <- newEmptyMVar
-    takeMVar sleepingPill
+    forever $ threadDelay 10000000
 
 serviceRegister :: Connection -> TVar ServiceMap
                 -> JsonMsg ServiceConfig -> IO ()
